@@ -2,23 +2,25 @@ import requests
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-
-from flaskr.db import db, City
+from sqlalchemy import exc
+from weather_app.db import db, City
 
 weather_bp = Blueprint('weather', __name__, url_prefix='/')
 
 
 @weather_bp.route('/', methods=['GET', 'POST'])
 def index():
-
     if request.method == 'POST':
-        new_city = request.form.get('city')
+        try:
+            new_city = request.form.get('city')
 
-        if new_city:
-            new_city_obj = City(name=new_city)
+            if new_city:
+                new_city_obj = City(name=new_city)
 
-            db.session.add(new_city_obj)
-            db.session.commit()
+                db.session.add(new_city_obj)
+                db.session.commit()
+        except (exc.IntegrityError, exc.PendingRollbackError):
+            error = f"City {new_city} is already registered."
 
     cities = City.query.all()
 
@@ -54,4 +56,17 @@ def delete_entry():
             db.session.delete(city_to_delete_obj)
             db.session.commit()
     return redirect('/')
+
+
+@weather_bp.route('/air_pollution', methods=['GET', 'POST'])
+def air_pollution():
+    current_city = ''
+    url = 'http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid=591e22f2a995634aa4214bad238cab35'
+    if request.method == 'POST':
+        pass
+
+    if current_city:
+        cities = City.query.first()
+
+        # city = City.query.filter_by(name=current_city)
 

@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-
+import flask_monitoringdashboard as dashboard
 
 def create_app(test_config=None):
     # create and configure the app
@@ -10,6 +10,7 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         SQLALCHEMY_DATABASE_URI="sqlite:///weather.db",
     )
+    dashboard.bind(app)
     # db init
     from . import db
 

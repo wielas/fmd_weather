@@ -5,7 +5,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy import exc
-from flaskr.db import db, User
+from weather_app.db import db, User
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
