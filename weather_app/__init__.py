@@ -10,7 +10,6 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         SQLALCHEMY_DATABASE_URI="sqlite:///weather.db",
     )
-    dashboard.bind(app)
     # db init
     from . import db
 
@@ -23,6 +22,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth.auth_bp)
     app.register_blueprint(weather.weather_bp)
 
+    dashboard.bind(app)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
