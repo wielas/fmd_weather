@@ -9,4 +9,8 @@ This is a sample project aimed to become a playground for implementing changes f
 
 `pip install -r requirements.txt`
 
+On Mac: `source venv/bin/activate`
+
+On Windows: `.\venv\Scripts\activate`
+
 `flask --app weather_app run --debug`
