@@ -17,6 +17,9 @@
                 What's the current weather like?
             </h1>
             <div style="display: flex;">
+                <a href="{{ url_for('weather.air_pollution') }}">
+                    <button style="margin-right: 5px; flex-direction: row-reverse">Check air pollution</button>
+                </a>
                 <a href="{{ url_for('auth.register') }}">
                     <button style="margin-right: 5px;">Register</button>
                 </a>

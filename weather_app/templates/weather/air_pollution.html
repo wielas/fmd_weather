@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>What's the weather like?</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css"/>
+</head>
+
+<body>
+<section class="hero is-primary">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">
+                What's the current air pollution like?
+            </h1>
+            <div style="display: flex;">
+                <a href="{{ url_for('weather.index') }}">
+                    <button style="margin-right: 5px;">Check the weather</button>
+                </a>
+                <a href="{{ url_for('auth.register') }}">
+                    <button style="margin-right: 5px;">Register</button>
+                </a>
+                <a href="{{ url_for('auth.login') }}">
+                    <button style="margin-right: 5px;">Log In</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-offset-4 is-4">
+                <form method="POST">
+                    <div class="field has-addons">
+                        <div class="control is-expanded">
+                            <input class="input" name="city" type="text" placeholder="City Name">
+                        </div>
+                        <div class="control">
+                            <button class="button is-info">
+                                Select City
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<h1 style="text-align: center">{{ city }}</h1>
+
+<table style="width:100%; border: 1px solid black; border-collapse: collapse;">
+    <tr>
+        {% for key, value in pollution.items() %}
+            <th>{{ key }}</th>
+        {% endfor %}
+    </tr>
+    <tr>
+        {% for key, value in pollution.items() %}
+            {% if key == 'aqi' and value > 5 %}
+                <td style="color: red">{{ value }}</td>
+            {% else %}
+                <td style="color: green">{{ value }}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+</table>

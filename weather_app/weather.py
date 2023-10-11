@@ -40,7 +40,7 @@ def index():
 
         weather_data.append(weather)
 
-    return render_template('current_weather.html', weather_data=weather_data)
+    return render_template('weather/current_weather.html', weather_data=weather_data)
 
 
 @weather_bp.route('/delete', methods=['GET', 'POST'])
@@ -60,13 +60,28 @@ def delete_entry():
 
 @weather_bp.route('/air_pollution', methods=['GET', 'POST'])
 def air_pollution():
-    current_city = ''
-    url = 'http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid=591e22f2a995634aa4214bad238cab35'
+    air_pollution_url = 'http://api.openweathermap.org/data/2.5/air_pollution?lat={lat}&lon={lon}&appid=591e22f2a995634aa4214bad238cab35'
+    geocoding_url = 'http://api.openweathermap.org/geo/1.0/direct?q={city}&appid=591e22f2a995634aa4214bad238cab35'
+
     if request.method == 'POST':
-        pass
+        current_city = request.form.get('city')
+        print(current_city)
+        session['city_pollution'] = current_city
+        r_geo = requests.get(geocoding_url.format(city=current_city)).json()
 
-    if current_city:
-        cities = City.query.first()
+    else:
+        current_city = City.query.first().name  # TODO catch if no city
+        r_geo = requests.get(geocoding_url.format(city=current_city)).json()
+        # print(r_geo)
+    lat = r_geo[0]['lat']
+    lon = r_geo[0]['lon']
 
-        # city = City.query.filter_by(name=current_city)
+    r_pollution = requests.get(air_pollution_url.format(lat=lat, lon=lon)).json()
+    pollution_dict = r_pollution['list'][0]['main']
+    pollution_dict |= r_pollution['list'][0]['components']
+    print(type(pollution_dict))
+    print(type(r_pollution['list'][0]['main']))
+    # pollution_dict['aqi'] = r_pollution['list'][0]['main']['aqi']
 
+
+    return render_template('weather/air_pollution.html', pollution=pollution_dict, city=current_city)

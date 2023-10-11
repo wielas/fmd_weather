@@ -10,10 +10,24 @@ from weather_app.db import db, User
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
-# @auth_bp.route("/users")
-# def user_list():
-#     users = db.session.execute(db.select(User).order_by(User.username)).scalars()
-#     return render_template("user/list.html", users=users)
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+
+
+@auth_bp.route("/users")
+@login_required
+def user_list():
+    users = db.session.execute(db.select(User).order_by(User.username)).scalars()
+    return render_template("auth/list_users.html", users=users)
+
 
 @auth_bp.route('/register', methods=('GET', 'POST'))
 def register():
@@ -30,8 +44,8 @@ def register():
         if error is None:
             try:
                 user = User(username=request.form['username'],
+                            # password=generate_password_hash(request.form['password']))
                             password=request.form['password'])
-                # password=generate_password_hash(request.form['password'])
                 db.session.add(user)
                 db.session.commit()
 
@@ -58,7 +72,7 @@ def login():
 
         if user is None:
             error = 'Incorrect username.'
-        # elif not check_password_hash(user['password'], password):
+        # elif not check_password_hash(user.password, password):
         elif not user.password == password:
             error = 'Incorrect password.'
 
@@ -66,7 +80,7 @@ def login():
             session.clear()
 
             session['user_id'] = user.id
-            return redirect(url_for(''))
+            return redirect(url_for('weather.index'))
 
         flash(error)
 
@@ -87,14 +101,3 @@ def load_logged_in_user():
 def logout():
     session.clear()
     return redirect(url_for('auth.login'))
-
-
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
-
-        return view(**kwargs)
-
-    return wrapped_view

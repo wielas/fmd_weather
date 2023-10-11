@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1 style="margin-left: 10px">{% block title %}List Users{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <ul>
+        {% for user in users %}
+            <li>{{ user.username }} -- {{ user.password }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
