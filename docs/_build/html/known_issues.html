@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Known Issues &#8212; Flask-MonitoringDashboard 3.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/flasky.css?v=51657187" />
+    <script src="_static/documentation_options.js?v=4f6ddb47"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contact" href="contact.html" />
+    <link rel="prev" title="Detailed Functionality" href="functionality.html" />
+     
+    
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+    
+    
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="contact.html" title="Contact"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="functionality.html" title="Detailed Functionality"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Flask-MonitoringDashboard 3.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Known Issues</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="known-issues">
+<h1>Known Issues<a class="headerlink" href="#known-issues" title="Link to this heading">¶</a></h1>
+<p>This page provides an overview of known bugs, workarounds, and limitations of the
+Flask Monitoring Dashboard.</p>
+<section id="deploying-with-mod-wsgi-apache">
+<h2>Deploying with mod_wsgi (Apache)<a class="headerlink" href="#deploying-with-mod-wsgi-apache" title="Link to this heading">¶</a></h2>
+<p>The FMD relies on the <code class="docutils literal notranslate"><span class="pre">scipy</span></code> package for some of the statistical tests
+used in the <em>Reports</em> feature. This package is incompatible with
+<code class="docutils literal notranslate"><span class="pre">mod_wsgi</span></code> by default, causing the deployment to fail. This is a common
+issue <a class="reference external" href="https://serverfault.com/questions/514242/non-responsive-apache-mod-wsgi-after-installing-scipy">[1]</a>
+<a class="reference external" href="https://stackoverflow.com/questions/16823388/using-scipy-in-django-with-apache-and-mod-wsgi">[2]</a>
+and can be solved by setting the</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span>WSGIApplicationGroup<span class="w"> </span>%{GLOBAL}
+</pre></div>
+</div>
+<p>directive in your WSGI configuration file, as described in the linked posts.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functionality.html">Detailed Functionality</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Known Issues</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#deploying-with-mod-wsgi-apache">Deploying with mod_wsgi (Apache)</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developing.html">Developing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/known_issues.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+<div class="github">
+    <a href="https://github.com/flask-dashboard/Flask-MonitoringDashboard">
+        <span>Fork me on GitHub</span>
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+</div>
+
+
+    
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Krzysztof Wielicki, Johannes Lind Christiansen. Version 3.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+    
+
+  </body>
+</html>

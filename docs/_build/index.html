@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>What is Flask-MonitoringDashboard? &#8212; Flask-MonitoringDashboard 3.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/flasky.css?v=51657187" />
+    <script src="_static/documentation_options.js?v=4f6ddb47"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+     
+    
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+    
+    <div class=indexwrapper>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="N">next</a> |</li>
+        <li class="nav-item nav-item-0"><a href="#">Flask-MonitoringDashboard 3.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">What is Flask-MonitoringDashboard?</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <figure class="align-default">
+<a class="reference internal image-reference" href="_images/header.png"><img alt="_images/header.png" src="_images/header.png" style="width: 100%;" /></a>
+</figure>
+<p><strong>Automatically monitor the evolving performance of Flask/Python web services</strong></p>
+<section id="what-is-flask-monitoringdashboard">
+<h1>What is Flask-MonitoringDashboard?<a class="headerlink" href="#what-is-flask-monitoringdashboard" title="Link to this heading">¶</a></h1>
+<p>The Flask Monitoring Dashboard is designed to easily monitor your Flask application.</p>
+</section>
+<section id="functionality">
+<h1>Functionality<a class="headerlink" href="#functionality" title="Link to this heading">¶</a></h1>
+<p>The Flask Monitoring Dashboard is an extension that offers 4 main functionalities with little effort from the Flask developer:</p>
+<ul class="simple">
+<li><p><strong>Monitor the performance and utilization:</strong>
+The Dashboard allows you to see which endpoints process a lot of requests and how fast.
+Additionally, it provides information about the evolving performance of an endpoint throughout different versions if you’re using git.</p></li>
+<li><p><strong>Profile requests and endpoints:</strong>
+The execution path of every request is tracked and stored into the database. This allows you to gain
+insight over which functions in your code take the most time to execute. Since all requests for an
+endpoint are also merged together, the Dashboard provides an overview of which functions are used in
+which endpoint.</p></li>
+<li><p><strong>Collect extra information about outliers:</strong>
+Outliers are requests that take much longer to process than regular requests.
+The Dashboard automatically detects that a request is an outlier and stores extra information about it (stack trace, request values, Request headers, Request environment).</p></li>
+<li><p><strong>Collect additional information about your Flask-application:</strong>
+Suppose you have an User-table and you want to know how many users are registered on your Flask-application.
+Then, you can run the following query: ‘SELECT Count(*) FROM USERS;’. But this is just annoying to do regularly.
+Therefore, you can configure this in the Flask-MonitoringDashboard, which will provide you this information per day (or other time interval).</p></li>
+</ul>
+<p>For more advanced documentation, have a look at the <a class="reference external" href="http://flask-monitoringdashboard.readthedocs.io/en/latest/functionality.html">the detailed functionality page</a>.</p>
+</section>
+<section id="user-s-guide">
+<h1>User’s Guide<a class="headerlink" href="#user-s-guide" title="Link to this heading">¶</a></h1>
+<p>If you are interested in the Flask-MonitoringDashboard, you can find more information in the links below:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#install-python">Install Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-a-virtual-environment-optional">Installing a Virtual Environment (Optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-the-flask-monitoringdashboard-package">Installing the Flask-MonitoringDashboard Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#setup-the-flask-monitoringdashboard">Setup the Flask-MonitoringDashboard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#further-configuration">Further configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#using-a-configuration-file">Using a configuration file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#the-content-of-the-configuration-file">The content of the configuration file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration.html#what-have-you-configured">What have you configured?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="functionality.html">Detailed Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="functionality.html#data-collection">1. Data Collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functionality.html#data-visualization">2. Data Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functionality.html#make-it-your-own">Make it your own!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functionality.html#telemetry">Telemetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functionality.html#need-more-information">Need more information?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="known_issues.html">Known Issues</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="known_issues.html#deploying-with-mod-wsgi-apache">Deploying with mod_wsgi (Apache)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="developer-information">
+<h1>Developer information<a class="headerlink" href="#developer-information" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contact.html#developing-team">Developing-team</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contact.html#found-a-bug">Found a bug?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developing.html">Developing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developing.html#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing.html#architecture">Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developing.html#tools">Tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="migration.html#migrating-from-1-x-x-to-2-0-0">Migrating from 1.X.X to 2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migration.html#migrating-from-2-x-x-to-3-0-0">Migrating from 2.X.X to 3.0.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#features-to-be-implemented">Features to be implemented</a></li>
+<li class="toctree-l2"><a class="reference internal" href="todo.html#work-in-progress">Work in progress</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v3-2-1">v3.2.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v3-1-2">v3.1.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v3-1-0">v3.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v3-0-9">v3.0.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v3-0-8">v3.0.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v3-0-7">v3.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v3-0-6">v3.0.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v3-0-0">v3.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-1-1">v2.1.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-1-0">v2.1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-0-7">v2.0.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v2-0-0">v2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-13-0">v1.13.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-12-0">v1.12.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-11-0">v1.11.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#v1-10-0">v1.10.0</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="#">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functionality.html">Detailed Functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="known_issues.html">Known Issues</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developing.html">Developing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+<div class="github">
+    <a href="https://github.com/flask-dashboard/Flask-MonitoringDashboard">
+        <span>Fork me on GitHub</span>
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+</div>
+
+
+    
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Krzysztof Wielicki, Johannes Lind Christiansen. Version 3.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+    </div>
+
+  </body>
+</html>

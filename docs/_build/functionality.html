@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Detailed Functionality &#8212; Flask-MonitoringDashboard 3.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/flasky.css?v=51657187" />
+    <script src="_static/documentation_options.js?v=4f6ddb47"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Known Issues" href="known_issues.html" />
+    <link rel="prev" title="Configuration" href="configuration.html" />
+     
+    
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+    
+    
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="known_issues.html" title="Known Issues"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="configuration.html" title="Configuration"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Flask-MonitoringDashboard 3.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Detailed Functionality</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="detailed-functionality">
+<h1>Detailed Functionality<a class="headerlink" href="#detailed-functionality" title="Link to this heading">¶</a></h1>
+<p>The functionality of the Dashboard is divided into two main components: data collection
+and data visualization.
+You can find detailed information about both components below.</p>
+<section id="data-collection">
+<h2>1. Data Collection<a class="headerlink" href="#data-collection" title="Link to this heading">¶</a></h2>
+<p>The amount of data collected by the Dashboard varies for each endpoint of the monitored
+Flask application, depending on the monitoring level selected. To select the monitoring level
+of your endpoints, you have to do the following (assuming you have successfully configured
+the Dashboard as described in <a class="reference external" href="configuration.html">the configuration page</a>):</p>
+<ol class="arabic simple">
+<li><p>Log into the Dashboard at: <a class="reference external" href="http://localhost:5000/dashboard/login">http://localhost:5000/dashboard/login</a></p></li>
+<li><p>Go to the Overview tab in the left menu: <a class="reference external" href="http://localhost:5000/dashboard/overview">http://localhost:5000/dashboard/overview</a></p></li>
+<li><p>Select the endpoints that you want to monitor.</p></li>
+<li><p>Select the desired monitoring level.</p></li>
+</ol>
+<p>A summary of the monitoring levels is provided next. Note that every level keeps all the
+features of the level below, in addition to bringing its own new features, as
+represented in the diagram below.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="_images/monitoring_levels.png"><img alt="_images/monitoring_levels.png" src="_images/monitoring_levels.png" style="width: 100%;" /></a>
+</figure>
+<section id="monitoring-level-0-disabled">
+<h3>Monitoring Level 0 - Disabled<a class="headerlink" href="#monitoring-level-0-disabled" title="Link to this heading">¶</a></h3>
+<p>When the monitoring level is set to 0, the Dashboard does not monitor anything about
+the performance of the endpoint. The only data that is stored is when the endpoint is
+last requested.</p>
+</section>
+<section id="monitoring-level-1-performance-and-utilization-monitoring">
+<h3>Monitoring Level 1 - Performance and Utilization Monitoring<a class="headerlink" href="#monitoring-level-1-performance-and-utilization-monitoring" title="Link to this heading">¶</a></h3>
+<p>When the monitoring level is set to 1, the Dashboard collects performance (as
+in response time) and utilization information for every request coming to
+that endpoint. The following data is recorded:</p>
+<ul>
+<li><p><strong>Duration:</strong> the duration of processing that request.</p></li>
+<li><p><strong>Time_requested:</strong> the timestamp of when the request is being made.</p></li>
+<li><p><strong>Version_requested:</strong> the version of the Flask-application at the moment when the request arrived.
+This can either be retrieved via the <cite>VERSION</cite> value, or via the <cite>GIT</cite> value.
+If both are configured, the <cite>GIT</cite> value is used.</p></li>
+<li><p><strong>group_by:</strong> An option to group the collected results.
+As most Flask applications have some kind of user management,
+this variable can be used to track the performance between different users.
+It is configured using the following command:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_user_id</span><span class="p">():</span>
+    <span class="k">return</span> <span class="mi">1234</span>  <span class="c1"># replace with a function to retrieve the id of the</span>
+                   <span class="c1"># user within a request.</span>
+
+<span class="n">dashboard</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">group_by</span> <span class="o">=</span> <span class="n">get_user_id</span>
+<span class="c1"># Note that the function itself is passed, not the result of the function.</span>
+</pre></div>
+</div>
+<p>Thus, it becomes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">import</span> <span class="nn">flask_monitoringdashboard</span> <span class="k">as</span> <span class="nn">dashboard</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">dashboard</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_from</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s1">&#39;/&lt;path to file&gt;/config.cfg&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">get_user_id</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;1234&#39;</span>  <span class="c1"># replace with a function to retrieve the id of the</span>
+                   <span class="c1"># user within a request.</span>
+
+<span class="n">dashboard</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">group_by</span> <span class="o">=</span> <span class="n">get_user_id</span>
+<span class="n">dashboard</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;Hello World!&#39;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The group_by-function must be a function that either returns a primitive (bool, bytes, float, int, str), or a function, or a tuple/list. Below is a list with a few valid examples:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Code</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>dashboard.config.group_by = lambda: 3</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-odd"><td><p>dashboard.config.group_by = lambda: (‘User’, 3)</p></td>
+<td><p>(User,3)</p></td>
+</tr>
+<tr class="row-even"><td><p>dashboard.config.group_by = lambda: lambda: 3</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-odd"><td><p>dashboard.config.group_by = (‘User’, lambda: 3)</p></td>
+<td><p>(User,3)</p></td>
+</tr>
+<tr class="row-even"><td><p>dashboard.config.group_by = lambda: ‘username’</p></td>
+<td><p>username</p></td>
+</tr>
+<tr class="row-odd"><td><p>dashboard.config.group_by = lambda: [‘Username’, ‘username’]</p></td>
+<td><p>(Username,username)</p></td>
+</tr>
+<tr class="row-even"><td><p>dashboard.config.group_by = lambda: [(‘User’, lambda: 3), (‘Username’, lambda: ‘username’)]</p></td>
+<td><p>((User,3),(Username,username))</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><strong>IP:</strong> The IP-address from which the request is made. The IP is retrieved by the following code:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;REMOTE_ADDR&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="monitoring-level-2-outliers">
+<h3>Monitoring Level 2 - Outliers<a class="headerlink" href="#monitoring-level-2-outliers" title="Link to this heading">¶</a></h3>
+<p>When the monitoring level is set to 2, the Dashboard collects extra information
+about slow requests.</p>
+<p>It is useful to investigate why certain requests take way longer to process than other requests.
+If this is the case, a request is seen as an outlier.
+Mathematically, a request is considered an outlier if its execution is a certain number of times longer than the
+average duration for requests coming to the same endpoint:</p>
+<p><span class="math notranslate nohighlight">\(duration_outlier &gt; duration_average * constant\)</span></p>
+<p>Where <span class="math notranslate nohighlight">\(duration_average\)</span> is the average execution time per endpoint, and <span class="math notranslate nohighlight">\(constant\)</span> is given in the configuration
+by OUTLIER_DETECTION_CONSTANT (its default value is <span class="math notranslate nohighlight">\(2.5\)</span>).</p>
+<p>When a request is an outlier, the Dashboard stores more information about it, such as:</p>
+<ul class="simple">
+<li><p>The stack-trace in which it got stuck.</p></li>
+<li><p>The percentage of the CPU’s that are in use.</p></li>
+<li><p>The current amount of memory that is used.</p></li>
+<li><p>Request values.</p></li>
+<li><p>Request headers.</p></li>
+<li><p>Request environment.</p></li>
+</ul>
+<p>The data that is collected from outliers, can be seen by the following procedure:</p>
+<ol class="arabic simple">
+<li><p>Go to the Dashboard Overview: <a class="reference external" href="http://localhost:5000/measurements/overview">http://localhost:5000/measurements/overview</a></p></li>
+<li><p>Click the endpoint for which you want to see the Outlier information.</p></li>
+<li><p>Go to the Outliers tab: <a class="reference external" href="http://localhost:5000/dashboard/endpoint/:endpoint_id:/outliers">http://localhost:5000/dashboard/endpoint/:endpoint_id:/outliers</a></p></li>
+</ol>
+</section>
+<section id="monitoring-level-3-profiler">
+<h3>Monitoring Level 3 - Profiler<a class="headerlink" href="#monitoring-level-3-profiler" title="Link to this heading">¶</a></h3>
+<p>When the monitoring level is set to 3, the Dashboard performs a
+<a class="reference external" href="https://docs.python.org/3/library/profile.html#what-is-deterministic-profiling">statistical profiling</a>
+of all the requests coming to that endpoint. What this means is that another
+thread will be launched in parallel with the one processing the request, it
+will periodically sample the processing thread, and will analyze its current stack
+trace. Using this information, the Dashboard will infer how long every function
+call inside the endpoint code takes to execute.</p>
+<p>The profiler is one of the most powerful features of the Dashboard, pointing to
+where your optimization efforts should be directed, one level of abstraction
+lower than the performance monitoring of Level 1. To access this information,
+you have to:</p>
+<ol class="arabic simple">
+<li><p>Go to the Overview tab in the left menu: <a class="reference external" href="http://localhost:5000/dashboard/overview">http://localhost:5000/dashboard/overview</a></p></li>
+<li><p>Select an endpoint for which the monitoring level is or was at some point at least 2.</p></li>
+<li><p>Go to the Profiler tab: <a class="reference external" href="http://localhost:5000/dashboard/endpoint/:endpoint_id:/profiler">http://localhost:5000/dashboard/endpoint/:endpoint_id:/profiler</a></p></li>
+<li><p>Go to the Grouped Profiler tab: <a class="reference external" href="http://localhost:5000/dashboard/endpoint/:endpoint_id:/grouped-profiler">http://localhost:5000/dashboard/endpoint/:endpoint_id:/grouped-profiler</a></p></li>
+</ol>
+<p>The Profiler tab shows all individual profiled requests of an endpoint
+in the form of a execution tree. Each code line is displayed along with
+its execution time and its share of the total execution time of the request.</p>
+<p>The Grouped Profiler tab shows the merged execution of up to 100 most recent
+profiled requests of an endpoint. This is displayed both as a table and as
+a Sunburst graph. The table shows for each code line information about
+the Hits (i.e. how many times it has been executed), average execution time
+and standard deviation, and also total execution time.</p>
+</section>
+</section>
+<section id="data-visualization">
+<h2>2. Data Visualization<a class="headerlink" href="#data-visualization" title="Link to this heading">¶</a></h2>
+<p>The Dashboard shows the collected data by means of two levels of abstraction:
+application-wide and endpoint-specific.</p>
+<section id="application">
+<h3>Application<a class="headerlink" href="#application" title="Link to this heading">¶</a></h3>
+<p>Visualizations showing aggregated data of all the endpoints (with monitoring level
+at least 1) in the application can be found under the <strong>Dashboard</strong> menu:</p>
+<ol class="arabic simple">
+<li><p><strong>Overview:</strong> A table with the all the endpoints that are being monitored (or have been monitored in the past).
+This table provides information about when the endpoint was last requested, how often it is requested and what is
+the current monitoring level. Each endpoint can be clicked to access the
+Endpoint-specific visualizations.</p></li>
+<li><p><strong>Hourly API Utilization:</strong> This graph provides information for each hour of the day of how often the endpoint is being requested. In
+this graph it is possible to detect popular hours during the day.</p></li>
+<li><p><strong>Multi Version API Utilization</strong>: This graph provides information about the distribution of the utilization of the requests per version.
+That is, how often (in percentages) is a certain endpoint requested in a certain version.</p></li>
+<li><p><strong>Daily API Utilization:</strong> This graph provides a row of information per day. In this graph, you can find
+whether the total number of requests grows over days.</p></li>
+<li><p><strong>API Performance:</strong> This graph provides a row of information per endpoint. In that row, you can find all the
+requests for that endpoint. This provides information whether certain endpoints perform better (in terms of
+execution time) than other endpoints.</p></li>
+<li><p><strong>Reporting:</strong> A more experimental feature which aims to automatically
+detect and report changes in performance for various intervals
+(e.g. today vs. yesterday, this week vs. last week, etc).</p></li>
+</ol>
+</section>
+<section id="endpoint">
+<h3>Endpoint<a class="headerlink" href="#endpoint" title="Link to this heading">¶</a></h3>
+<p>For each endpoint in the Overview page, you can click on the endpoint to get more details.
+This provides the following information (all information below is specific for a single endpoint):</p>
+<ol class="arabic simple">
+<li><p><strong>Hourly API Utilization:</strong> The same hourly load as explained in (2) above, but this time it is focused on the data of that particular endpoint only.</p></li>
+<li><p><strong>User-Focused Multi-Version Performance:</strong> A circle plot with the average execution time per user per version. Thus, this graph consists of 3 dimensions (execution time, users, versions). A larger circle represents a higher execution time.</p></li>
+<li><p><strong>IP-Focused Multi-Version Performance:</strong> The same type of plot as ‘User-Focused Multi-Version Performance’, but now that users are replaced by IP-addresses.</p></li>
+<li><p><strong>Per-Version Performance:</strong> A horizontal box plot with the execution times for a specific version. This graph is equivalent to (4.), but now it is focused on the data of that particular endpoint only.</p></li>
+<li><p><strong>Per-User Performance:</strong> A horizontal box plot with the execution time per user. In this graph, it is possible to detect if there is a difference in the execution time between users.</p></li>
+<li><p><strong>Profiler:</strong> A tree with the execution path for all requests.</p></li>
+<li><p><strong>Grouped Profiler:</strong> A tree with the combined execution paths for all (&lt;100) requests of this endpoint.</p></li>
+<li><p><strong>Outliers:</strong> The extra information collected on outlier requests.</p></li>
+</ol>
+</section>
+</section>
+<section id="make-it-your-own">
+<h2>Make it your own!<a class="headerlink" href="#make-it-your-own" title="Link to this heading">¶</a></h2>
+<p>Just as no two applications are the same, we understand that monitoring requirements
+differ for every use case. While all the above visualizations are included by
+default in the FMD and answer a wide range of questions posed by the typical web
+application developer, you can also create your own custom visualizations tailored
+to your needs.</p>
+<p>You might wish to know how the number of unique users, the size of your
+database, or the total number of endpoints have evolved over time. This is now
+easy to visualize using FMD.</p>
+<p>An example of a custom graph is shown below. FMD will execute <code class="code docutils literal notranslate"><span class="pre">on_the_minute()</span></code>
+every minute at the second 01 and the graph will appear in the <strong>Custom graphs</strong> menu.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">on_the_minute</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;On the minute: </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">//</span> <span class="mi">10</span><span class="p">)</span>
+
+
+<span class="n">minute_schedule</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;second&#39;</span><span class="p">:</span> <span class="mi">00</span><span class="p">}</span>
+
+<span class="n">dashboard</span><span class="o">.</span><span class="n">add_graph</span><span class="p">(</span><span class="s2">&quot;On Half Minute&quot;</span><span class="p">,</span> <span class="n">on_the_minute</span><span class="p">,</span> <span class="s2">&quot;cron&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">minute_schedule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Note the “cron” argument to the add graph.
+Just like in the case of the unix cron utility you can use
+more complex schedules. For example, if you want to collect
+the data every day at midnight you would use:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">midnight_schedule</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;month&#39;</span><span class="p">:</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+                     <span class="s1">&#39;day&#39;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span>
+                     <span class="s1">&#39;hour&#39;</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span>
+                     <span class="s1">&#39;minute&#39;</span><span class="p">:</span> <span class="mi">59</span><span class="p">,</span>
+                     <span class="s1">&#39;second&#39;</span><span class="p">:</span> <span class="mi">00</span><span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Besides cron, there’s also the “interval” schedule type, which
+is exemplified in the following snippet:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">every_ten_seconds</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;every_ten_seconds!!! </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">//</span> <span class="mi">10</span><span class="p">)</span>
+
+
+<span class="n">every_ten_seconds_schedule</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;seconds&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+
+<span class="n">dashboard</span><span class="o">.</span><span class="n">add_graph</span><span class="p">(</span><span class="s2">&quot;Every 10 Seconds&quot;</span><span class="p">,</span> <span class="n">every_ten_seconds</span><span class="p">,</span> <span class="s2">&quot;interval&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">every_ten_seconds_schedule</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Note that not all fields in the <code class="code docutils literal notranslate"><span class="pre">schedule</span></code> dictionary
+are required, only the non-zero / non-star ones.</p>
+<p>Also, note that in the “cron” graph types you use singular names (e.g. second)
+while in the “interval” you use plurals (e.g. seconds).</p>
+<p>Finally, the implementation of the scheduler in the FMD
+is based on the appscheduler.schedulers.Background schedulers
+about which you can read more <a class="reference external" href="apscheduler.schedulers">in the corresponding documentation page</a>.</p>
+</section>
+<section id="telemetry">
+<h2>Telemetry<a class="headerlink" href="#telemetry" title="Link to this heading">¶</a></h2>
+<p>The Dashboard is setup to be able to collect telemetric-data.
+This data-collection can be toggled on and off under the “Configuration” route.</p>
+<p>You can find detailed information about what and how data is collected below.</p>
+<p>What:</p>
+<ol class="arabic simple">
+<li><p><strong>Number of endpoints:</strong> We collect the amount of endpoints, no names or anything that could expose your application.</p></li>
+<li><p><strong>Number of blueprints:</strong> We collect the amount of blueprints, again - only the number.</p></li>
+<li><p><strong>Aggregated monitoring levels:</strong> To determine the most frequently utilized monitoring level, we aggregate the levels set from each endpoint.</p></li>
+<li><p><strong>Table size:</strong> In order to determine how fast the data accumulates, we collect the size of the database and its tables.</p></li>
+</ol>
+<p>How:</p>
+<p>We post the data anonymously to a remote server. This way we can monitor which functionalities are being used the most, and which functionalities are not being used at all. We are a small research team and this way we can focus our efforts on what actually matters.
+This is most of the logic behind the telemetry:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">post_to_back_if_telemetry_enabled</span><span class="p">(</span><span class="n">class_name</span><span class="o">=</span><span class="s1">&#39;Endpoints&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Function to send telemetry data to remote database</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">if</span> <span class="n">telemetry_config</span><span class="o">.</span><span class="n">telemetry_consent</span><span class="p">:</span>
+    <span class="n">back4app_endpoint</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;https://parseapi.back4app.com/classes/</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="n">telemetry_config</span><span class="o">.</span><span class="n">telemetry_headers</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;fmd_id&#39;</span><span class="p">:</span> <span class="n">telemetry_config</span><span class="o">.</span><span class="n">fmd_user</span><span class="p">,</span> <span class="s1">&#39;session&#39;</span><span class="p">:</span> <span class="n">telemetry_config</span><span class="o">.</span><span class="n">telemetry_session</span><span class="p">}</span> <span class="c1"># fmd_id is the random uuid of the user, session is amount of times app was initialized</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">back4app_endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="need-more-information">
+<h2>Need more information?<a class="headerlink" href="#need-more-information" title="Link to this heading">¶</a></h2>
+<p>Check out the <a class="reference external" href="contact.html">contact page</a> to see how you can get in touch with us.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Detailed Functionality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data-collection">1. Data Collection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-visualization">2. Data Visualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#make-it-your-own">Make it your own!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#telemetry">Telemetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#need-more-information">Need more information?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="known_issues.html">Known Issues</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developing.html">Developing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/functionality.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+<div class="github">
+    <a href="https://github.com/flask-dashboard/Flask-MonitoringDashboard">
+        <span>Fork me on GitHub</span>
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+</div>
+
+
+    
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Krzysztof Wielicki, Johannes Lind Christiansen. Version 3.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+    
+
+  </body>
+</html>

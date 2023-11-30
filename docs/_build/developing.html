@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Developing &#8212; Flask-MonitoringDashboard 3.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/flasky.css?v=51657187" />
+    <script src="_static/documentation_options.js?v=4f6ddb47"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Migration" href="migration.html" />
+    <link rel="prev" title="Contact" href="contact.html" />
+     
+    
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+    
+    
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="migration.html" title="Migration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="contact.html" title="Contact"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Flask-MonitoringDashboard 3.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Developing</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="developing">
+<h1>Developing<a class="headerlink" href="#developing" title="Link to this heading">¶</a></h1>
+<p>Fixing a bug, implementing a new feature, or just improving the quality of the
+code, we always appreciate contributions! We understand that getting accustomed to a
+new project takes some time and effort, but we’re trying to make this process as smooth
+and intuitive as possible.</p>
+<p>Whereas until now, we’ve discussed FMD from the point of view of the user,
+this page shows FMD from the point of view of the developer. We explain the
+architecture of the project, take a look at the main components, and then
+present some useful tools that we use during development.</p>
+<section id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
+<p>In order to get started with the environment of the FMD, run the following script</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>./config/install.sh
+</pre></div>
+</div>
+<p>Note the ‘. ‘ before the script. This will activate your virtual environment. This script is
+responsible for setting up the project, and installing the following pre-commit hooks:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/psf/black">Black</a>: for automatic formatting the code. Note that we use a width-length of 100 characters.</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/flake8">Flake8</a>: for checking style error.</p></li>
+<li><p>Auto increase the Python version. This can either be a major, minor, or patch version increase. For more info, see
+the Versions-section below.</p></li>
+</ul>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">¶</a></h2>
+<p>From an architectural perspective, the Flask Monitoring Dashboard uses the
+Layers pattern. There are 3 layers: data layer, logic layer, presentation layer.
+Each of these is discussed in detail in this section.</p>
+<p>The diagram below shows how FMD interacts with the monitored application. We
+assumed that the application uses a database and a web interface, but these
+components are not mandatory. Also, the FMD DB can be the same as the Application
+DB.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="_images/architecture.png"><img alt="_images/architecture.png" src="_images/architecture.png" style="width: 100%;" /></a>
+</figure>
+<section id="data-layer">
+<h3>Data layer<a class="headerlink" href="#data-layer" title="Link to this heading">¶</a></h3>
+<p>This layer is responsible for the data collected by FMD about the monitored
+application. The database schema is shown below.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="_images/fmd_db.png"><img alt="_images/fmd_db.png" src="_images/fmd_db.png" style="width: 100%;" /></a>
+</figure>
+<p>The Data layer is technology-agnostic: you can use any RDBMS system you like, as
+long as it is supported by <a class="reference external" href="https://www.sqlalchemy.org/">SQLAlchemy</a>, the Object Relational Mapper used
+by FMD! We mostly use SQLite for development purposes, but regularly test FMD
+with MySQL and PostgreSQL.</p>
+</section>
+<section id="logic-layer">
+<h3>Logic layer<a class="headerlink" href="#logic-layer" title="Link to this heading">¶</a></h3>
+<p>This layer is responsible for implementing all the features of FMD, storing and
+retrieving the collected data to and from the Data layer, and providing a REST
+API to be used by the Presentation layer. The Logic layer is written in Python and
+contains the following 4 directories: controllers, core, database, views.</p>
+<ul class="simple">
+<li><p><strong>database:</strong> contains all the functions that access the Data layer.
+No function from outside this directory should make queries to the database
+directly.</p></li>
+<li><p><strong>views:</strong> contains the REST API. The Presentation layer uses the REST API to
+get the data that it has to show in the web interface.</p></li>
+<li><p><strong>controllers:</strong> contains the business logic that transforms the objects from
+the database into objects that can be used by the Presentation layer. It
+represents the link between <strong>database</strong> and <strong>views</strong>.</p></li>
+<li><p><strong>core:</strong> this is where the magic of FMD happens. Measuring the performance of
+monitored endpoints, profiling requests, and detecting outliers are all
+implemented in this directory.</p></li>
+</ul>
+</section>
+<section id="presentation-layer">
+<h3>Presentation layer<a class="headerlink" href="#presentation-layer" title="Link to this heading">¶</a></h3>
+<p>This layer is responsible for showing the data collected by FMD in a user-friendly
+web interface. It is written using AngularJS 1.7.5 framework and Jinja2 templating
+language, and contains 2 directories: static and templates.</p>
+<ul class="simple">
+<li><p><strong>templates:</strong> only contains 2 Jinja2 templates. They represent the entry point
+for the web interface and request all the Javascript files required.</p></li>
+<li><p><strong>static:</strong> contains the JavaScript, HTML, and CSS files. The code follows
+the Model-View-Controller pattern. The main components of this directory
+are described below:</p>
+<ul>
+<li><p>app.js: defines the app and implements the routing mechanism. For each route,
+a JS controller and HTML template are specified.</p></li>
+<li><p>controllers: JS files that make calls to the REST API of FMD and implement
+the logic of how the data is visualized.</p></li>
+<li><p>services: JS files that contain cross-controller logic.</p></li>
+<li><p>directives.js: file that declares custom HTML tags.</p></li>
+<li><p>filters.js: contains functions used for nicely formatting the data.</p></li>
+<li><p>pages: HTML files for building the web interface.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="frontend-environment">
+<h3>Frontend environment<a class="headerlink" href="#frontend-environment" title="Link to this heading">¶</a></h3>
+<p>To run the frontend, these versions of Node and NPM are known to work:
+-NPM v10.1.0
+-Node v20.9.0</p>
+<p><em>Use the commands while being in the frontend folder (Flask-MonitoringDashboard/flask_monitoringdashboard/frontend).</em></p>
+<p>To install the packages:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>i
+</pre></div>
+</div>
+<p>To run the testing environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>run<span class="w"> </span>dev
+</pre></div>
+</div>
+<p>Any changes made in the code will now be reflected on the dashboard.</p>
+</section>
+</section>
+<section id="tools">
+<h2>Tools<a class="headerlink" href="#tools" title="Link to this heading">¶</a></h2>
+<p>The following tools are used for helping the development of the Dashboard:</p>
+<ul>
+<li><p><strong>Branches</strong>: The Dashboard uses the following branches:</p>
+<ul class="simple">
+<li><p><strong>Master</strong>: This is the branch that will ensure a working version of the Dashboard. It is
+shown as the default branch on Github. The Master branch will approximately be updated every
+week. Every push to the master will be combined with a new version that is released in
+<a class="reference external" href="https://pypi.org/project/Flask-MonitoringDashboard">PyPi</a>. This branch is also used to
+compute the <a class="reference external" href="https://codecov.io/gh/flask-dashboard/Flask-MonitoringDashboard">Code coverage</a> and build the <a class="reference external" href="http://flask-monitoringdashboard.readthedocs.io">documentation</a>. In case of a PR from development
+into master, take care of the following two things:</p>
+<ol class="arabic simple">
+<li><p>The version must be updated in flask_monitoringdashboard/constants.json</p></li>
+<li><p>The changelog should be updated in docs/changelog.rst</p></li>
+</ol>
+</li>
+<li><p><strong>Development</strong>: This branch contains the current working version of the Dashboard. This branch
+contains the most recent version of the Dashboard, but there might be a few bugs in this version.</p></li>
+<li><p><strong>Feature branch</strong>: This branch is specific per feature, and will be removed after the
+corresponding feature has been merged into the development branch. It is recommended to often
+merge development into this branch, to keep the feature branch up to date.</p></li>
+</ul>
+</li>
+<li><p><strong>Heroku deployment</strong>: The following branches are automatically deployed to Heroku. This is useful for quickly
+testing, without running any code locally.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Master</strong>: The master branch is deployed at: <a class="reference external" href="https://fmd-master.herokuapp.com">https://fmd-master.herokuapp.com</a>.</p></li>
+<li><p><strong>Development</strong>: The development is deployed at: <a class="reference external" href="https://fmd-development.herokuapp.com">https://fmd-development.herokuapp.com</a>.</p></li>
+<li><p><strong>Pull requests</strong>: Pull requests are also automatically build with a unique URL.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Unit testing</strong>: The code is tested before a Pull Request is accepted. If you want to run the unit
+tests locally, you can use the following command from the root of Flask-MonitoringDashboard
+directory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">test</span>
+</pre></div>
+</div>
+<p>All the tests are in the <strong>test</strong> directory and follow the naming convetion
+<code class="code docutils literal notranslate"><span class="pre">test_*.py</span></code>.</p>
+</li>
+<li><p><strong>Travis</strong>: Travis CI is a hosted, distributed continuous integration service used to build
+and test software projects hosted at GitHub. The Dashboard uses Travis to ensure that all
+tests are passed before a change in the code reaches the Master branch.</p></li>
+<li><p><strong>Documentation</strong>: The documentation is generated using <a class="reference external" href="www.sphinx-doc.org">Sphinx</a> and hosted on <a class="reference external" href="http://flask-monitoringdashboard.readthedocs.io">ReadTheDocs</a>. If you
+want to build the documentation locally, you can use the following commands:</p>
+<p><em>Use the commands while being in the docs folder (Flask-MonitoringDashboard/docs).</em></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>linux:
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+make<span class="w"> </span>html
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>windows:
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>.<span class="w"> </span>_build
+</pre></div>
+</div>
+<p>The generated html files can be found in the following folder: Flask-MonitoringDashboard/docs/build.</p>
+<p>Using the make command, you can build more, than only HTML-files. For a list of all possible options,
+use the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span><span class="nb">help</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Versions:</strong> The Dashboard uses <a class="reference external" href="https://semver.org/">Semantic-versioning</a>. Therefore, it is specified in a <strong>Major</strong> . <strong>Minor</strong> . <strong>Patch</strong> -format:</p>
+<ul class="simple">
+<li><p><strong>Major</strong>: Increased when the Dashboard contains incompatible API changes with the previous version.</p></li>
+<li><p><strong>Minor</strong>: Increased when the Dashboard has new functionality in a backwards-compatible manner.</p></li>
+<li><p><strong>Patch</strong>: Increased when a bug-fix is made.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functionality.html">Detailed Functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="known_issues.html">Known Issues</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools">Tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/developing.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+<div class="github">
+    <a href="https://github.com/flask-dashboard/Flask-MonitoringDashboard">
+        <span>Fork me on GitHub</span>
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+</div>
+
+
+    
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Krzysztof Wielicki, Johannes Lind Christiansen. Version 3.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+    
+
+  </body>
+</html>
