@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Migration &#8212; Flask-MonitoringDashboard 3.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/flasky.css?v=51657187" />
+    <script src="_static/documentation_options.js?v=4f6ddb47"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="TODO List" href="todo.html" />
+    <link rel="prev" title="Developing" href="developing.html" />
+     
+    
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+    
+    
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="todo.html" title="TODO List"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="developing.html" title="Developing"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Flask-MonitoringDashboard 3.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Migration</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="migration">
+<h1>Migration<a class="headerlink" href="#migration" title="Link to this heading">¶</a></h1>
+<section id="migrating-from-1-x-x-to-2-0-0">
+<h2>Migrating from 1.X.X to 2.0.0<a class="headerlink" href="#migrating-from-1-x-x-to-2-0-0" title="Link to this heading">¶</a></h2>
+<p>Version 2.0.0 offers a lot more functionality, including Request- and Endpoint-profiling.</p>
+<p>There are two migrations that you have to do, before you can use version 2.0.0.</p>
+<ol class="arabic">
+<li><p><strong>Migrate the database:</strong> Since version 2.0.0 has a different database scheme, the
+Flask-MonitoringDashboard cannot automatically migrate to this version.</p>
+<p>We have created a script for you that can achieve this. It migrates the data in the existing
+database into a new database, without removing the existing database.</p>
+<p>You can find <a class="reference external" href="https://github.com/flask-dashboard/Flask-MonitoringDashboard/tree/master/migration/migrate_v1_to_v2.py">the migration script here</a>.</p>
+<p>If you want to run this script, you need to be aware of the following:</p>
+<ul>
+<li><p>If you already have version 1.X.X of the Flask-MonitoringDashboard installed, first update to
+2.0.0 before running this script. You can update a package by:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>flask_monitoringdashboard<span class="w"> </span>--upgrade
+</pre></div>
+</div>
+</li>
+<li><p>set <strong>OLD_DB_URL</strong> on line 16, such that it points to your existing database.</p></li>
+<li><p>set <strong>NEW_DB_URL</strong> on line 17, to a new database name version. Note that they can’t be the same.</p></li>
+<li><p>Once you have migrated your database, you have to update the database location in your configuration-file.</p></li>
+</ul>
+</li>
+<li><p><strong>Migrate the configuration file</strong>: You also have to update the configuration file completely, since we’ve
+re factored this to make it more clear. The main difference is that several properties have been re factored
+to a new header-name.</p>
+<p>For an example of a new configuration file, see <a class="reference external" href="https://github.com/flask-dashboard/Flask-MonitoringDashboard/tree/master/config.cfg">this configuration file</a>.</p>
+</li>
+</ol>
+</section>
+<section id="migrating-from-2-x-x-to-3-0-0">
+<h2>Migrating from 2.X.X to 3.0.0<a class="headerlink" href="#migrating-from-2-x-x-to-3-0-0" title="Link to this heading">¶</a></h2>
+<p>Version 3.0.0 adds functionality for tracking return status codes for each endpoint.</p>
+<p>This requires a minimal change to the database: adding the ‘status_code’ (INT) field to the Request table.</p>
+<p>You can add the field by hand, or you can run <a class="reference external" href="https://github.com/flask-dashboard/Flask-MonitoringDashboard/tree/master/migration/migrate_v2_to_v3.py">the corresponding migration script</a>:</p>
+<blockquote>
+<div></div></blockquote>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functionality.html">Detailed Functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="known_issues.html">Known Issues</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developing.html">Developing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Migration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#migrating-from-1-x-x-to-2-0-0">Migrating from 1.X.X to 2.0.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#migrating-from-2-x-x-to-3-0-0">Migrating from 2.X.X to 3.0.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/migration.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+<div class="github">
+    <a href="https://github.com/flask-dashboard/Flask-MonitoringDashboard">
+        <span>Fork me on GitHub</span>
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+</div>
+
+
+    
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Krzysztof Wielicki, Johannes Lind Christiansen. Version 3.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+    
+
+  </body>
+</html>

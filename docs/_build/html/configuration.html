@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Configuration &#8212; Flask-MonitoringDashboard 3.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=4f649999" />
+    <link rel="stylesheet" type="text/css" href="_static/flasky.css?v=51657187" />
+    <script src="_static/documentation_options.js?v=4f6ddb47"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Detailed Functionality" href="functionality.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+     
+    
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body>
+    
+    
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="functionality.html" title="Detailed Functionality"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Flask-MonitoringDashboard 3.2.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Configuration</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h1>
+<p>Once you have successfully installed the Flask-MonitoringDashboard using the instructions from
+<a class="reference external" href="installation.html">the installation page</a>, you can use the advanced features by correctly configuring the Dashboard.</p>
+<section id="using-a-configuration-file">
+<h2>Using a configuration file<a class="headerlink" href="#using-a-configuration-file" title="Link to this heading">¶</a></h2>
+<p>You can use a single configuration file for all options below.
+This is explained in the following section.
+In order to configure the Dashboard with a configuration-file, you can use the following function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dashboard</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_from</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s1">&#39;/&lt;path to file&gt;/config.cfg&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Your app then becomes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">import</span> <span class="nn">flask_monitoringdashboard</span> <span class="k">as</span> <span class="nn">dashboard</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">dashboard</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_from</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s1">&#39;/&lt;path to file&gt;/config.cfg&#39;</span><span class="p">)</span>
+<span class="c1"># Make sure that you first configure the dashboard, before binding it to your Flask application</span>
+<span class="n">dashboard</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+<span class="o">...</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;Hello World!&#39;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Instead of having a hard-coded string containing the location of the config file in the code above,
+it is also possible to define an environment variable that specifies the location of this config file.
+The line should then be:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dashboard</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">init_from</span><span class="p">(</span><span class="n">envvar</span><span class="o">=</span><span class="s1">&#39;FLASK_MONITORING_DASHBOARD_CONFIG&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will configure the Dashboard based on the file provided in the environment variable called <cite>FLASK_MONITORING_DASHBOARD_CONFIG</cite>.</p>
+</section>
+<section id="the-content-of-the-configuration-file">
+<h2>The content of the configuration file<a class="headerlink" href="#the-content-of-the-configuration-file" title="Link to this heading">¶</a></h2>
+<p>Once the setup is complete, a <a class="reference external" href="https://github.com/flask-dashboard/Flask-MonitoringDashboard/tree/master/config.cfg">configuration file</a> (e.g. ‘config.cfg’) should be set next to the python
+file that contains the entry point of the app. The following properties can be configured:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">dashboard</span><span class="p">]</span>
+<span class="n">APP_VERSION</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="n">GIT</span><span class="o">=/&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">your</span> <span class="n">project</span><span class="o">&gt;/.</span><span class="n">git</span><span class="o">/</span>
+<span class="n">CUSTOM_LINK</span><span class="o">=</span><span class="n">dashboard</span>
+<span class="n">MONITOR_LEVEL</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">OUTLIER_DETECTION_CONSTANT</span><span class="o">=</span><span class="mf">2.5</span>
+<span class="n">SAMPLING_PERIOD</span><span class="o">=</span><span class="mi">20</span>
+<span class="n">ENABLE_LOGGING</span><span class="o">=</span><span class="kc">True</span>
+<span class="n">BRAND_NAME</span><span class="o">=</span><span class="n">Flask</span> <span class="n">Monitoring</span> <span class="n">Dashboard</span>
+<span class="n">TITLE_NAME</span><span class="o">=</span><span class="n">Flask</span><span class="o">-</span><span class="n">MonitoringDashboard</span>
+<span class="n">DESCRIPTION</span><span class="o">=</span><span class="n">Automatically</span> <span class="n">monitor</span> <span class="n">the</span> <span class="n">evolving</span> <span class="n">performance</span> <span class="n">of</span> <span class="n">Flask</span><span class="o">/</span><span class="n">Python</span> <span class="n">web</span> <span class="n">services</span>
+<span class="n">SHOW_LOGIN_BANNER</span><span class="o">=</span><span class="kc">True</span>
+<span class="n">SHOW_LOGIN_FOOTER</span><span class="o">=</span><span class="kc">True</span>
+
+<span class="p">[</span><span class="n">authentication</span><span class="p">]</span>
+<span class="n">USERNAME</span><span class="o">=</span><span class="n">admin</span>
+<span class="n">PASSWORD</span><span class="o">=</span><span class="n">admin</span>
+<span class="n">SECURITY_TOKEN</span><span class="o">=</span><span class="n">cc83733cb0af8b884ff6577086b87909</span>
+
+<span class="p">[</span><span class="n">database</span><span class="p">]</span>
+<span class="n">TABLE_PREFIX</span><span class="o">=</span><span class="n">fmd</span>
+<span class="n">DATABASE</span><span class="o">=</span><span class="n">sqlite</span><span class="p">:</span><span class="o">////&lt;</span><span class="n">path</span> <span class="n">to</span> <span class="n">your</span> <span class="n">project</span><span class="o">&gt;/</span><span class="n">dashboard</span><span class="o">.</span><span class="n">db</span>
+
+<span class="p">[</span><span class="n">visualization</span><span class="p">]</span>
+<span class="n">TIMEZONE</span><span class="o">=</span><span class="n">Europe</span><span class="o">/</span><span class="n">Amsterdam</span>
+<span class="n">COLORS</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;main&#39;</span><span class="p">:</span><span class="s1">&#39;[0,97,255]&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;static&#39;</span><span class="p">:</span><span class="s1">&#39;[255,153,0]&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>As can be seen above, the configuration is split into 4 headers:</p>
+<section id="dashboard">
+<h3>Dashboard<a class="headerlink" href="#dashboard" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>APP_VERSION:</strong> The version of the application that you use.
+Updating the version allows seeing the changes in the execution time of requests over multiple versions.</p></li>
+<li><p><strong>GIT:</strong> Since updating the version in the configuration-file when updating code isn’t very convenient,
+another way is to provide the location of the git-folder. From the git-folder,
+the version is automatically retrieved by reading the commit-id (hashed value).
+The specified value is the location to the git-folder. This is relative to the configuration-file.</p></li>
+<li><p><strong>CUSTOM_LINK:</strong> The Dashboard can be visited at localhost:5000/{{CUSTOM_LINK}}.</p></li>
+<li><p><strong>MONITOR_LEVEL</strong>: The level for monitoring your endpoints. The default value is 3. For more information, see the
+Overview page of the Dashboard.</p></li>
+<li><p><strong>OUTLIER_DETECTION_CONSTANT:</strong> When the execution time is greater than <span class="math notranslate nohighlight">\(constant * average\)</span>,
+extra information is logged into the database. A default value for this variable is <span class="math notranslate nohighlight">\(2.5\)</span>.</p></li>
+<li><p><strong>SAMPLING_PERIOD:</strong> Time between two profiler-samples. The time must be specified in ms.
+If this value is not set, the profiler monitors continuously.</p></li>
+<li><p><strong>ENABLE_LOGGING:</strong> Boolean if you want additional logs to be printed to the console. Default
+value is False.</p></li>
+<li><p><strong>BRAND_NAME:</strong> The name displayed in the Dashboard Navbar. Default value is ‘Flask Monitoring Dashboard’.</p></li>
+<li><p><strong>TITLE_NAME:</strong> The name displayed in the browser tab. Default value is ‘Flask-MonitoringDashboard’.</p></li>
+<li><p><strong>DESCRIPTION:</strong> The text displayed in center of the Dashboard Navbar. Default value is
+‘Automatically monitor the evolving performance of Flask/Python web services’.</p></li>
+<li><p><strong>SHOW_LOGIN_BANNER:</strong> Boolean if you want the login page to show the ‘Flask Monitoring Dashboard’ logo and title.
+Default value is True.</p></li>
+<li><p><strong>SHOW_LOGIN_FOOTER:</strong> Boolean if you want the login page to show a link to the official documentation.
+Default value is True.</p></li>
+</ul>
+</section>
+<section id="authentication">
+<h3>Authentication<a class="headerlink" href="#authentication" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>USERNAME</strong> and <strong>PASSWORD:</strong> Must be used for logging into the Dashboard. Both are required.</p></li>
+<li><p><strong>SECURITY_TOKEN:</strong> The token that is used for exporting the data to other services. If you leave this unchanged,
+any service is able to retrieve the data from the database.</p></li>
+</ul>
+</section>
+<section id="database">
+<h3>Database<a class="headerlink" href="#database" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>TABLE_PREFIX:</strong> A prefix to every table that the Flask-MonitoringDashboard uses, to ensure that there are no
+conflicts with the other tables, that are specified by the user of the dashboard.</p></li>
+<li><p><strong>DATABASE:</strong> Suppose you have multiple projects that you’re working on and want to separate the results.
+Then you can specify different database_names, such that the result of each project is stored in its own database.</p></li>
+</ul>
+</section>
+<section id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p><strong>TIMEZONE:</strong> The timezone for converting a UTC timestamp to a local timestamp. For a list of all
+timezones, use the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pytz</span>  <span class="c1"># pip install pytz</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pytz</span><span class="o">.</span><span class="n">all_timezones</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The dashboard saves the time of every request by default in a UTC-timestamp. However, if you want to display
+it in a local timestamp, you need this property.</p>
+</li>
+<li><p><strong>COLORS:</strong> The endpoints are automatically hashed into a color.
+However, if you want to specify a different color for an endpoint, you can set this variable.
+It must be a dictionary with the endpoint-name as a key, and a list of length 3 with the RGB-values. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">COLORS</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;main&#39;</span><span class="p">:</span><span class="s1">&#39;[0,97,255]&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;static&#39;</span><span class="p">:</span><span class="s1">&#39;[255,153,0]&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="what-have-you-configured">
+<h2>What have you configured?<a class="headerlink" href="#what-have-you-configured" title="Link to this heading">¶</a></h2>
+<p>We’ve shown a bunch of configuration settings, but what features are now supported in your Flask
+application and how are they related to the config options?
+Have a look at <a class="reference external" href="functionality.html">the detailed functionality page</a> to find the answer.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#using-a-configuration-file">Using a configuration file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-content-of-the-configuration-file">The content of the configuration file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-have-you-configured">What have you configured?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="functionality.html">Detailed Functionality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="known_issues.html">Known Issues</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developing.html">Developing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="todo.html">TODO List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/configuration.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+
+<div class="github">
+    <a href="https://github.com/flask-dashboard/Flask-MonitoringDashboard">
+        <span>Fork me on GitHub</span>
+        <img src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+    </a>
+</div>
+
+
+    
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Krzysztof Wielicki, Johannes Lind Christiansen. Version 3.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
+    </div>
+    
+
+  </body>
+</html>
